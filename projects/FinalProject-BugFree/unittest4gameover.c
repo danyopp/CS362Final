@@ -82,10 +82,9 @@ int printGameState(struct gameState G)
 //Declare Gamestate
 int main()
 {
-	int k[10] = { adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall };
+	int k[10] = { adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, tribute };
 
 	struct gameState G;
-	struct gameState preG;
 	
 	unsigned seed;
 	seed = time(0);
@@ -93,47 +92,66 @@ int main()
 
 //////////////////////////////////////////////////
 //Begin test 1
-// Try to upgrade a estate to gold
 //////////////////////////////////////////////////
 	memset(&G, 23, sizeof(struct gameState)); 
-	memset(&preG, 23, sizeof(struct gameState)); 
 	int r = initializeGame(3, k, seed, &G);
 	assert(0,r,"initialize Game");
 
 	//make testing changes to gamestate
-	G.hand[G.whoseTurn][0] = mine; //mine added to deck 
-	G.hand[G.whoseTurn][1] = copper; // add estate to deck 
-	G.hand[G.whoseTurn][2] = estate; 
-	G.hand[G.whoseTurn][3] = estate;
-	G.hand[G.whoseTurn][4] = estate;
+	G.supplyCount[province] = 0; 
 
-	//copy inital gamestate
-	memcpy(&preG, &G, sizeof(G));
+
 	int returnVal;
-	int *placeholder = NULL;
 	
-	//int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
-	returnVal = cardEffect( mine, 1, silver, -1, &G, 0, placeholder); 
-	
-//	printGameState(preG);
+	returnVal = isGameOver(&G);
+
 //	printGameState(G);
 
 	//Test results for expected outcome
-	printf("TEST Bug 1 RESULTS: upgrade a copper to silver\n");
-	assert( 0, returnVal, "Return Value should be zero" );
-	assert( mine, G.playedCards[0], "mine missing from played cards");
-	assert( 1, G.playedCardCount, "expected only one card in played cards array");
-	assert( G.handCount[0], 4, "Handcount not 4 cards");
-	int a = 0;
-	int estatecount = 0;
-	int silvercount = 0;
-	for(a=0; a < G.handCount[G.whoseTurn]; a++)
-		{
-			if(G.hand[G.whoseTurn][a] == estate) {estatecount++;}
-			if(G.hand[G.whoseTurn][a] == silver) {silvercount++;}
-		}
-	assert( 3, estatecount, "Number of estates in hand should be 3");
-	assert( 1, silvercount, "Number of silvers in hand should be 1"); 
+	printf("TEST Bug 4a RESULTS: Game Over? no providence\n");
+	assert( 1, returnVal, "Return Value should be one" );
 
-	return 0;
+//////////////////////////////////////////////////
+//Begin test 2
+//////////////////////////////////////////////////
+	memset(&G, 23, sizeof(struct gameState)); 
+	r = initializeGame(3, k, seed, &G);
+	assert(0,r,"initialize Game");
+
+	//make testing changes to gamestate
+	G.supplyCount[sea_hag] = 0; 
+	G.supplyCount[treasure_map] = 0; 
+
+	returnVal = isGameOver(&G);
+
+//	printGameState(G);
+
+	//Test results for expected outcome
+	printf("TEST Bug 4b RESULTS: Game Over? no sea_hag no treasure_map\n");
+	assert( 0, returnVal, "Return Value should be zero" );
+
+//////////////////////////////////////////////////
+//Begin test 3
+//////////////////////////////////////////////////
+	memset(&G, 23, sizeof(struct gameState)); 
+	r = initializeGame(3, k, seed, &G);
+	assert(0,r,"initialize Game");
+
+	//make testing changes to gamestate
+	G.supplyCount[salvager] = 0; 
+	G.supplyCount[sea_hag]= 0; 
+	G.supplyCount[treasure_map] = 0; 
+
+	returnVal = isGameOver(&G);
+
+//	printGameState(G);
+
+	//Test results for expected outcome
+	printf("TEST Bug 4c RESULTS: Game Over? no salvager, no sea_hag, no treasure_map\n");
+	assert( 1, returnVal, "Return Value should be one" );
+
+
+
+
+return 0;
 }
