@@ -122,17 +122,15 @@ int main()
 	assert( 0, returnVal, "Return Value should be zero" );
 	assert( remodel, G.playedCards[0], "remodel missing from played cards");
 	assert( 1, G.playedCardCount, "expected only one card in played cards array");
-	assert( G.handCount[0], 4, "Handcount not 4 cards");
+	assert( 3, G.handCount[0],  "Handcount not 4 cards");
 	int a = 0;
 	int estatecount = 0;
-	int tributecount = 0;
 	for(a=0; a < G.handCount[G.whoseTurn]; a++)
 		{
 			if(G.hand[G.whoseTurn][a] == estate) {estatecount++;}
-			if(G.hand[G.whoseTurn][a] == tribute) {tributecount++;}
 		}
 	assert( 3, estatecount, "Number of estates in hand should be 3");
-	assert( 1, tributecount, "Number of tributes in hand should be 1"); 
+ 	assert( tribute, G.discard[0][0], "Tribute should be placed in discard pile");
 //////////////////////////////////////////////////
 //Begin test 2
 //////////////////////////////////////////////////

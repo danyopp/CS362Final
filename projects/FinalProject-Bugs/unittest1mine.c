@@ -113,7 +113,7 @@ int main()
 	int *placeholder = NULL;
 	
 	//int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
-	returnVal = cardEffect( mine, copper, silver, -1, &G, 0, placeholder); 
+	returnVal = cardEffect( mine, 1, silver, -1, &G, 0, placeholder); 
 	
 //	printGameState(preG);
 //	printGameState(G);
